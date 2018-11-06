@@ -601,7 +601,7 @@ switch y %NEED TO SOLVE LATER: npc does not know what to do if user's last step 
             end
         end
     case 5
-        
+        for 
 end
 end
 fprintf('NPC: Row:%d Col:%d\n',npc_y,npc_x);
