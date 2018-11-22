@@ -1,5 +1,12 @@
 
 
-load Othello.mat;
-
-imshow([Board{1,:};Board{2,:};Board{3,:};Board{4,:};Board{5,:};Board{6,:};Board{7,:};Board{8,:}]);
+i=2;
+while i==2
+    switch i
+        case 1
+            break;
+        case 2
+    end
+end
+            
+fprintf("\n jump");

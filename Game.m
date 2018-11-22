@@ -55,19 +55,21 @@ while(~GAME_END)
     
     %%%%%%%%%%%%%NPC_TURN%%%%%%%%%%%%%
     [npc_X,npc_Y]=npc_check_eligibility(CURRENT_BOARD,~disc_color);
-    CURRENT_BOARD(npc_Y,npc_X)=~disc_color;
-    Board{npc_Y,npc_X}=npc_disc;
-    imshow([Board{1,:};Board{2,:};Board{3,:};Board{4,:};Board{5,:};Board{6,:};Board{7,:};Board{8,:}])%refresh play board
-    [npc_eat_row,npc_eat_col]=eating_check(CURRENT_BOARD,npc_Y,npc_X);
-    if npc_eat_row<=8&&npc_eat_col<=8
-        CURRENT_BOARD(npc_eat_row,npc_eat_col)=~CURRENT_BOARD(npc_eat_row,npc_eat_col);
-        if Board{npc_eat_row,npc_eat_col}==blackdisc
-            Board{npc_eat_row,npc_eat_col}=whitedisc;
-        else
-            Board{npc_eat_row,npc_eat_col}=blackdisc;
+    if npc_X<=8&&npc_Y<=8 %if returned a "good" value
+        CURRENT_BOARD(npc_Y,npc_X)=~disc_color;
+        Board{npc_Y,npc_X}=npc_disc;
+        imshow([Board{1,:};Board{2,:};Board{3,:};Board{4,:};Board{5,:};Board{6,:};Board{7,:};Board{8,:}])%refresh play board
+        [npc_eat_row,npc_eat_col]=eating_check(CURRENT_BOARD,npc_Y,npc_X);
+        if npc_eat_row<=8&&npc_eat_col<=8
+            CURRENT_BOARD(npc_eat_row,npc_eat_col)=~CURRENT_BOARD(npc_eat_row,npc_eat_col);
+            if Board{npc_eat_row,npc_eat_col}==blackdisc
+                Board{npc_eat_row,npc_eat_col}=whitedisc;
+            else
+                Board{npc_eat_row,npc_eat_col}=blackdisc;
+            end
         end
+        imshow([Board{1,:};Board{2,:};Board{3,:};Board{4,:};Board{5,:};Board{6,:};Board{7,:};Board{8,:}])%refresh play board
     end
-    imshow([Board{1,:};Board{2,:};Board{3,:};Board{4,:};Board{5,:};Board{6,:};Board{7,:};Board{8,:}])%refresh play board
     
     %%%%%%%%%%%%%FINISH_CHECK%%%%%%%%%%%%%
     GAME_END=finish_check(CURRENT_BOARD);
@@ -122,7 +124,6 @@ y=9-y;
 
 end
 
-
 function [pos_X,pos_Y]=user_turn(board)
 state=0;
 while ~state
@@ -136,74 +137,42 @@ end
 fprintf('USER: Row:%d Col:%d\n',pos_Y,pos_X);
 end
 
-
 function disc_state=check_valid(board,row,col)%white=0 black=1
-board(row,col)=1; %try it regardless of validity
-if row<=2
-    if col<=2
-        if board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+2,col)==board(row,col)
-            disc_state=1;
-        elseif board(row,col)==~board(row,col+2)&&board(row,col+1)~=2&&board(row,col+1)==board(row,col)
-            disc_state=1;
-        else
-            disc_state=0;
-        end
-    elseif col>=3&&col<=6
-        if board(row,col)==~board(row,col-1)&&board(row,col-1)~=2&&board(row,col-2)==board(row,col) %<-
-            disc_state=1;
-        elseif board(row,col)==~board(row,col+1)&&board(row,col+2)~=2&&board(row,col+2)==board(row,col) %->
-            disc_state=1;
-        elseif board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+1,col)==board(row,col) %downward
-            disc_state=1;                                                                                
-        else
-            disc_state=0;
-        end
-    elseif col>=7
-        if board(row,col)==~board(row,col-1)&&board(row,col-1)~=2&&board(row,col-2)==board(row,col) %<-
-            disc_state=1;
-        elseif board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+1,col)==board(row,col) %downward
-            disc_state=1; 
-        else
-            disc_state=0;
-        end
-    end
-elseif row>=3&&row<=6
-    if col<=2
-        if board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+2,col)==board(row,col) %downward
-            disc_state=1;
-        elseif board(row,col)==~board(row,col+2)&&board(row,col+1)~=2&&board(row,col+1)==board(row,col) %rightward
-            disc_state=1;
-        elseif board(row,col)==~board(row-1,col)&&board(row-1,col)~=2&&board(row-2,col)==board(row,col) %upward
-            disc_state=1; 
-        else
-            disc_state=0;
-        end
-    elseif col>=3&&col<=6
-        if board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+2,col)==board(row,col) %downward
-            disc_state=1;
-        elseif board(row,col)==~board(row,col+2)&&board(row,col+1)~=2&&board(row,col+2)==board(row,col) %rightward
-            disc_state=1;
-        elseif board(row,col)==~board(row-1,col)&&board(row-1,col)~=2&&board(row-2,col)==board(row,col) %upward
-            disc_state=1; 
-        elseif board(row,col)==~board(row,col-1)&&board(row,col-1)~=2&&board(row,col-2)==board(row,col) %leftward
-            disc_state=1;
-        else
-            disc_state=0;
-        end
-    elseif col>=7
-        if board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+2,col)==board(row,col) %downward
-            disc_state=1;
-        elseif board(row,col)==~board(row-1,col)&&board(row-1,col)~=2&&board(row-2,col)==board(row,col) %upward
-            disc_state=1;
-        elseif board(row,col)==~board(row,col-1)&&board(row,col-1)~=2&&board(row,col-2)==board(row,col) %leftward
-            disc_state=1;
-        else
-            disc_state=0;
-        end
-    end
-elseif row>=7
+if board(row,col)==2
+    board(row,col)=1; %test if it is valid
+    if row<=2
         if col<=2
-            if board(row,col)==~board(row,col+2)&&board(row,col+1)~=2&&board(row,col+2)==board(row,col) %rightward
+            if board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+2,col)==board(row,col)
+                disc_state=1;
+            elseif board(row,col)==~board(row,col+2)&&board(row,col+1)~=2&&board(row,col+1)==board(row,col)
+                disc_state=1;
+            else
+                disc_state=0;
+            end
+        elseif col>=3&&col<=6
+            if board(row,col)==~board(row,col-1)&&board(row,col-1)~=2&&board(row,col-2)==board(row,col) %<-
+                disc_state=1;
+            elseif board(row,col)==~board(row,col+1)&&board(row,col+2)~=2&&board(row,col+2)==board(row,col) %->
+                disc_state=1;
+            elseif board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+1,col)==board(row,col) %downward
+                disc_state=1;                                                                                
+            else
+                disc_state=0;
+            end
+        elseif col>=7
+            if board(row,col)==~board(row,col-1)&&board(row,col-1)~=2&&board(row,col-2)==board(row,col) %<-
+                disc_state=1;
+            elseif board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+1,col)==board(row,col) %downward
+                disc_state=1; 
+            else
+                disc_state=0;
+            end
+        end
+    elseif row>=3&&row<=6
+        if col<=2
+            if board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+2,col)==board(row,col) %downward
+                disc_state=1;
+            elseif board(row,col)==~board(row,col+1)&&board(row,col+1)~=2&&board(row,col+1)==board(row,col) %rightward
                 disc_state=1;
             elseif board(row,col)==~board(row-1,col)&&board(row-1,col)~=2&&board(row-2,col)==board(row,col) %upward
                 disc_state=1; 
@@ -211,9 +180,21 @@ elseif row>=7
                 disc_state=0;
             end
         elseif col>=3&&col<=6
-            if board(row,col)==~board(row-1,col)&&board(row-1,col)~=2&&board(row-2,col)==board(row,col) %upward
+            if board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+2,col)==board(row,col) %downward
                 disc_state=1;
-            elseif board(row,col)==~board(row,col+2)&&board(row,col+1)~=2&&board(row,col+2)==board(row,col) %rightward
+            elseif board(row,col)==~board(row,col+1)&&board(row,col+1)~=2&&board(row,col+2)==board(row,col) %rightward
+                disc_state=1;
+            elseif board(row,col)==~board(row-1,col)&&board(row-1,col)~=2&&board(row-2,col)==board(row,col) %upward
+                disc_state=1; 
+            elseif board(row,col)==~board(row,col-1)&&board(row,col-1)~=2&&board(row,col-2)==board(row,col) %leftward
+                disc_state=1;
+            else
+                disc_state=0;
+            end
+        elseif col>=7
+            if board(row,col)==~board(row+1,col)&&board(row+1,col)~=2&&board(row+2,col)==board(row,col) %downward
+                disc_state=1;
+            elseif board(row,col)==~board(row-1,col)&&board(row-1,col)~=2&&board(row-2,col)==board(row,col) %upward
                 disc_state=1;
             elseif board(row,col)==~board(row,col-1)&&board(row,col-1)~=2&&board(row,col-2)==board(row,col) %leftward
                 disc_state=1;
@@ -221,59 +202,31 @@ elseif row>=7
                 disc_state=0;
             end
         end
+    elseif row>=7
+            if col<=2
+                if board(row,col)==~board(row,col+1)&&board(row,col+1)~=2&&board(row,col+2)==board(row,col) %rightward
+                    disc_state=1;
+                elseif board(row,col)==~board(row-1,col)&&board(row-1,col)~=2&&board(row-2,col)==board(row,col) %upward
+                disc_state=1; 
+                else
+                    disc_state=0;
+                end
+            elseif col>=3&&col<=6
+                if board(row,col)==~board(row-1,col)&&board(row-1,col)~=2&&board(row-2,col)==board(row,col) %upward
+                    disc_state=1;
+                elseif board(row,col)==~board(row,col+1)&&board(row,col+1)~=2&&board(row,col+2)==board(row,col) %rightward
+                    disc_state=1;
+                elseif board(row,col)==~board(row,col-1)&&board(row,col-1)~=2&&board(row,col-2)==board(row,col) %leftward
+                    disc_state=1;
+                else
+                    disc_state=0;
+                end
+            end
+    end
+else
+    disc_state=0;            
 end
-        
-            
-
 end
-
-% function state=check_valid(board,row,col,color)%white=0, black=1
-% state=0;%false
-% if row==1
-%     if col>=2&&col<=7
-%         if board(row,col-1)==~color||board(row,col+1)==~color||board(row+1,col)==~color
-%             state=1;
-%         end
-%     elseif col==1
-%         if board(row,col+1)==~color||board(row+1,col)==~color
-%             state=1;
-%         end
-%     elseif col==8
-%         if board(row+1,col)==~color||board(row,col-1)==~color
-%             state=1;
-%         end
-%     end
-%         
-% elseif row>=2&&row<=7
-%     if col==1
-%         if board(row+1,col)==~color||board(row-1,col)==~color||board(row,col+1)==~color
-%             state=1;
-%         end
-%     elseif col>=2&&col<=7
-%         if board(row+1,col)==~color||board(row-1,col)==~color||board(row,col+1)==~color||board(row,col-1)==~color
-%             state=1;
-%         end
-%     elseif col==8
-%         if board(row+1,col)==~color||board(row-1,col)==~color||board(row,col-1)==~color
-%             state=1;
-%         end
-%     end
-% elseif row==8
-%     if col>=2&&col<=7
-%         if board(row,col+1)==~color||board(row,col-1)==~color||board(row-1,col)==~color
-%             state=1;
-%         end
-%     elseif col==1
-%         if board(row-1,col)==~color||board(row,col+1)==~color
-%             state=1;
-%         end
-%     elseif col==8
-%         if board(row-1,col)==~color||board(row,col-1)==~color
-%             state=1;
-%         end
-%     end
-% end
-% end
 
 function [eat_row,eat_col]=eating_check(board,row,col)
 if row<=2
@@ -433,7 +386,7 @@ end
 
 
 
-function [npc_x,npc_y]=npc_check_eligibility(board,npc_color)
+function [npc_row,npc_col]=npc_check_eligibility(board,npc_color)
 k=1;
 for i=1:1:8
     for j=1:1:8
@@ -444,50 +397,89 @@ for i=1:1:8
         end
     end
 end
+
+solution_amount=size(npc_point);
+solution_amount=solution_amount(1);
 state=0;
 k=1;
+jump=0;
 while ~state
-    if npc_point(k,1)<=2 %row<=2
-        if npc_point(k,2)<=2 %col<=2
-            
-        elseif npc_point(k,2)>=3&&npc_point(k,2)<=6 %3<=col<=6
-            
-        elseif npc_point(k,2)>=7 %col>=7
-            
-        end
-    elseif npc_point(k,1)>=3&&npc_point(k,1)<=6 %row check
-         
-        if npc_point(k,2)<=2 %col
-            
-        elseif npc_point(k,2)>=3&&npc_point(k,2)<=6 %col
-            if board(npc_point(k,1)+1,npc_point(k,2))==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2))==2
-                npc_x=npc_point(k,1)+2;
-                npc_y=npc_point(k,2);
-                state=1;
-            elseif board(npc_point(k,1),npc_point(k,2))==~npc_color&&board(npc_point(k,1)-2,board(npc_point(k,2)))==2
-                npc_x=npc_point(k,1)-2;
-                npc_y=npc_point(k,2);
-                state=1;
-            elseif board(npc_point(k,1),npc_point(k,2))==~npc_color&&board(npc_point(k,1),board(npc_point(k,2))+2)==2
-                npc_x=npc_point(k,1);
-                npc_y=npc_point(k,2)+2;
-                state=1;
-            elseif board(npc_point(k,1),npc_point(k,2))==~npc_color&&board(npc_point(k,1),board(npc_point(k,2))-2)==2
-                npc_x=npc_point(k,1);
-                npc_y=npc_point(k,2)-2;
-                state=1;
+    if npc_point(k,1)==1||npc_point(k,1)==2 %ROW1-2
+        if npc_point(k,2)==1||npc_point(k,2)==2 %COL 1-2
+            if board(npc_point(k,1)+1,npc_point(k,2))==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2))==2 %↓↓↓↓↓↓↓↓
+                npc_row=npc_point(k,1)+2;
+                npc_col=npc_point(k,2);
+            elseif board(npc_point(k,1),npc_point(k,2)+1)==~npc_color&&board(npc_point(k,1),npc_point(k,2)+2)==2 %→→→→→→→→→
+                npc_row=npc_point(k,1);
+                npc_col=npc_point(k,2)+2;
+            elseif board(npc_point(k,1)+1,npc_point(k,2)+1)==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2)+2)==2 %↘↘↘↘↘↘↘↘
+                npc_row=npc_point(k,1)+2;
+                npc_col=npc_point(k,2)+2;
+            else
+                jump=1;
             end
-        elseif npc_point(k,2)>=7  
-        end
-    elseif npc_point(k,1)>=7
-        if npc_point(k,2)<=2
-            
-        elseif npc_point(k,2)>=3&&npc_point(k,2)<=6
-            
-        elseif npc_point(k,2)>=7
-            
-        end
+        elseif npc_point(k,2)>=3&&npc_point(k,2)<=6 %COL 3-6
+            if board(npc_point(k,1),npc_point(k,2)-1)==~npc_color&&board(npc_point(k,1),npc_point(k,2)-2)==2 %←←←←←←←←←
+                npc_row=npc_point(k,1);
+                npc_col=npc_point(k,2)-2;
+            elseif board(npc_point(k,1)+1,npc_point(k,2)-1)==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2)-2)==2 %↙↙↙↙↙↙↙↙
+                npc_row=npc_point(k,1)+2;
+                npc_col=npc_point(k,2)-2;
+            elseif board(npc_point(k,1)+1,npc_point(k,2))==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2))==2 %↓↓↓↓↓↓↓↓
+                npc_row=npc_point(k,1)+2;
+                npc_col=npc_point(k,2);
+            elseif board(npc_point(k,1)+1,npc_point(k,2)+1)==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2)+2)==2 %↘↘↘↘↘↘↘↘
+                npc_row=npc_point(k,1)+2;
+                npc_col=npc_point(k,2)+2;
+            elseif board(npc_point(k,1),npc_point(k,2)+1)==~npc_color&&board(npc_point(k,1),npc_point(k,2)+2)==2 %→→→→→→→→→
+                npc_row=npc_point(k,1);
+                npc_col=npc_point(k,2)+2;
+            else
+                jump=1;
+            end
+        elseif npc_point(k,2)==7||npc_point(k,2)==8 %COL 7-8
+            if board(npc_point(k,1),npc_point(k,2)-1)==~npc_color&&board(npc_point(k,1),npc_point(k,2)-2)==2 %←←←←←←←←←
+                npc_row=npc_point(k,1);
+                npc_col=npc_point(k,2)-2;
+            elseif board(npc_point(k,1)+1,npc_point(k,2)-1)==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2)-2)==2 %↙↙↙↙↙↙↙↙
+                npc_row=npc_point(k,1)+2;
+                npc_col=npc_point(k,2)-2;
+            elseif board(npc_point(k,1)+1,npc_point(k,2))==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2))==2 %↓↓↓↓↓↓↓↓
+                npc_row=npc_point(k,1)+2;
+                npc_col=npc_point(k,2);
+            else
+                jump=1;
+            end
+        end %ROW 1-2 FINISHED
+    elseif npc_point(k,1)>=3&&npc_point(k,1)<=6 %ROW 3-6
+        if npc_point(k,2)==1&&npc_point(k,2)==2 %COL 1-2
+            if board(npc_point(k,1)-1,npc_point(k,2))==~npc_color&&board(npc_point(k,1)-2,npc_point(k,2))==2 %↑↑↑↑↑↑↑↑↑↑
+                npc_row=npc_point(k,1)-1;
+                npc_col=npc_point(k,2);
+            elseif board(npc_point(k,1)-1,npc_point(k,2)+1)==~npc_color&&board(npc_point(k,1)-2,npc_point(k,2)+2)==2 %↗↗↗↗↗↗↗↗
+                npc_row=npc_point(k,1)-2;
+                npc_col=npc_point(k,2)+2;
+            elseif board(npc_point(k,1),npc_point(k,2)+1)==~npc_color&&board(npc_point(k,1),npc_point(k,2)+2)==2 %→→→→→→→→→
+                npc_row=npc_point(k,1);
+                npc_col=npc_point(k,2)+2;
+            elseif  board(npc_point(k,1)+1,npc_point(k,2)+1)==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2)+2)==2 %↘↘↘↘↘↘↘↘
+                npc_row=npc_point(k,1)+2;
+                npc_col=npc_point(k,2)+2;
+            elseif board(npc_point(k,1)+1,npc_point(k,2))==~npc_color&&board(npc_point(k,1)+2,npc_point(k,2))==2 %↓↓↓↓↓↓↓↓
+                npc_row=npc_point(k,1)+2;
+                npc_col=npc_point(k,2);
+            else
+                jump=1;
+
     end
- end
+    
+    if jump==1
+        if k<solution_amount
+            k=k+1; %CHECK NEXT DISC 
+        end
+    else
+        state=1; %BREAK
+    end
+end
 
 end
