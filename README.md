@@ -1,3 +1,3 @@
 # OthelloInMatlab
-## Is open source a kind of academic misconduct?
-##😂😂😂😂
+Is open source a kind of academic misconduct?
+😂😂😂😂
