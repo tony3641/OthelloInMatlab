@@ -18,12 +18,33 @@ imshow([Board{1,:};Board{2,:};Board{3,:};Board{4,:};Board{5,:};Board{6,:};Board{
 
 game_state=1; %start
 while game_state
-
+    CURRENT_BOARD=user_step(CURRENT_BOARD);
+    for i=1:1:8
+        for j=1:1:8
+            if CURRENT_BOARD(i,j)==1
+                Board{i,j}=blackdisc;
+            elseif CURRENT_BOARD(i,j)==0
+                Board{i,j}=whitedisc;
+            end
+        end
+    end %update graphic board
+    imshow([Board{1,:};Board{2,:};Board{3,:};Board{4,:};Board{5,:};Board{6,:};Board{7,:};Board{8,:}])
+    
+    
 end
 
 
-
-
+function board_output=user_step(board)
+    state=0;
+    while state==0
+       [row,col]=user_pos(); 
+       state=validity_check(board,row,col,1);
+    end
+    board(row,col)=1;
+    board=flipping_disc(board,row,col,1);
+    
+    board_output=board;
+end
 
 function [row,col]=user_pos()
     [user_x,user_y]=ginput(1);
@@ -71,8 +92,9 @@ end
 
 function state = validity_check(board,row,col,playerTurn)
     state=0;
+    jump=0;%initialization
     
-    while state==0 
+    if state==0 
         for j=col+1:1:7 % right horizontal direction
             if (playerTurn == 0)    
                 switch board(row,j)
@@ -81,13 +103,13 @@ function state = validity_check(board,row,col,playerTurn)
                             state=0;
                         else
                             state=1;
-                            break; %jump
+                            jump=1; %jump
                         end
                     case 1
                         % do nothing
                     case 2
                         state=0;
-                        break; %jump
+                        jump=1; %jump
                 end % end switch playerTurn 0
             elseif (playerTurn == 1)
                 switch board(row,j)
@@ -98,33 +120,36 @@ function state = validity_check(board,row,col,playerTurn)
                             state=0;
                         else
                             state=1;
-                            break; %jump
+                            jump=1; %jump
                         end
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end 
-            end   
+            end
+            if jump
+                jump=0;
+                break;
+            end
         end  
     end %?????
-
-    while state==0
+    if state==0
         for j=col-1:-1:2 % left horizontal direction
             if (playerTurn == 0) %npc   
                 switch board(row,j)
                     case 0
                         if j==col-1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 1
                     
                     case 2
                         state = 0;
-                        break;
+                        jump=1;
                 end 
             elseif (playerTurn == 1)
                 switch board(row,j)
@@ -133,36 +158,39 @@ function state = validity_check(board,row,col,playerTurn)
                     case 1
                         if j==col-1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end 
-            end 
+            end
+            if jump
+                jump=0;
+                break;
+            end
         end 
     end %?????
-    
-    while state==0
+    if state==0
         for i=row+1:1:7 % down vertical direction
             if (playerTurn == 0)    
                 switch board(i,col)
                     case 0
                         if i==row+1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 1
                         
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end % end switch playerTurn 0
             elseif (playerTurn == 1)
                 switch board(i,col)
@@ -171,36 +199,39 @@ function state = validity_check(board,row,col,playerTurn)
                     case 1
                         if i==row+1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end 
-            end 
+            end
+            if jump
+                jump=0;
+                break;
+            end
         end 
     end %?????
-    
-    while state==0
+    if state==0
         for i=row-1:-1:2 % up vertical direction
             if (playerTurn == 0)    
                 switch board(i,col)
                     case 0
                         if i==row-1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 1
                         
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end % end switch playerTurn 0
             elseif (playerTurn == 1)
                 switch board(i,col)
@@ -209,20 +240,23 @@ function state = validity_check(board,row,col,playerTurn)
                     case 1
                         if i==row-1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end % end switch playerTurn 1
             end % end if-else statement
+            if jump
+                jump=0;
+                break;
+            end
         end % end for i loop
     end %?????
-    
-    while state==0
+    if state==0
         for i=row+1:1:7 % down-right direction
             j=i-row+col; 
             if (playerTurn == 0)    
@@ -230,16 +264,16 @@ function state = validity_check(board,row,col,playerTurn)
                     case 0
                         if i==row+1&&j==col+1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 1
                         
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end % end switch playerTurn 0
             elseif (playerTurn == 1)
                 switch board(i,j)
@@ -248,20 +282,23 @@ function state = validity_check(board,row,col,playerTurn)
                     case 1
                         if i==row+1&&j==col+1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end % end switch playerTurn 1
-            end % end if-else statement  
+            end % end if-else statement
+            if jump
+                jump=0;
+                break;
+            end
         end % end for i loop
     end %?????
-    
-    while state==0
+    if state==0
         for i=row+1:1:7 % down-left direction
             j=row-i+col;
             if (playerTurn == 0)    
@@ -269,16 +306,16 @@ function state = validity_check(board,row,col,playerTurn)
                     case 0
                         if i==row+1&&j==col-1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 1
                         
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end % end switch playerTurn 0
             elseif (playerTurn == 1)
                 switch board(i,j)
@@ -287,20 +324,23 @@ function state = validity_check(board,row,col,playerTurn)
                     case 1
                         if i==row+1&&j==col+1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end 
-            end  
+            end
+            if jump
+                jump=0;
+                break;
+            end
         end 
     end %?????
-    
-    while state==0
+    if state==0
         for i=row-1:-1:2 % up-right direction
             j=row-i+col;
             if (playerTurn == 0)    
@@ -308,16 +348,16 @@ function state = validity_check(board,row,col,playerTurn)
                     case 0
                         if i==row-1&&j==col-1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 1
                         
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end % end switch playerTurn 0
             elseif (playerTurn == 1)
                 switch board(i,j)
@@ -326,20 +366,23 @@ function state = validity_check(board,row,col,playerTurn)
                     case 1
                         if i==row-1&&j==col+1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end % end switch playerTurn 1
-            end % end if-else statement  
+            end % end if-else statement
+            if jump
+                jump=0;
+                break;
+            end
         end % end for i loop
     end %?????
-    
-    while state==0
+    if state==0
         for i=row-1:-1:2 % up-left direction
             j=i-row+col;
             if (playerTurn == 0)    
@@ -347,123 +390,148 @@ function state = validity_check(board,row,col,playerTurn)
                     case 0
                         if i==row-1&&j==col-1
                             state=0;
-                            break;
+                            jump=1;
                         else
                             state=1;
-                            break;
+                            jump=1;
                         end
                     case 1
                         
                     case 2
                         state=0;
-                        break;
+                        jump=1;
                 end % end switch playerTurn 0
             elseif (playerTurn == 1)
                 switch board(i,j)
                     case 0
-                        board(i,j) = 1;
+                        if i==row-1&&j==col-1
+                            state=0;
+                            jump=1;
+                        else
+                            state=1;
+                            jump=1;
+                        end
                     case 1
-                        break;
+                        
                     case 2
-                        break;
+                        jump=1;
                 end % end switch playerTurn 1
             end % end if-else statement  
+            if jump
+                jump=0;
+                break;
+            end
         end % end for i loop
     end %?????
     
 end 
 
-
 function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC=0
     %UNTITLED Summary of this function goes here
     %   Detailed explanation goes here
-    
+    jump=0; %initialization
     for j=col+1:1:7 % right horizontal direction
         if (playerTurn == 0)    
             switch board(row,j)
                 case 0
-                    break;
+                    jump=1;
                 case 1
                     board(row,j) = 0;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 0
         elseif (playerTurn == 1)
             switch board(row,j)
                 case 0
                     board(row,j) = 1;
                 case 1
-                    break;
+                    jump=1;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 1
         end % end if-else statement  
+        if jump
+            jump=0;
+            break;
+        end
     end  % end for j loop
     
     for j=col-1:-1:2 % left horizontal direction
         if (playerTurn == 0)    
             switch board(row,j)
                 case 0
-                    break;
+                    jump=1;
                 case 1
                     board(row,j) = 0;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 0
         elseif (playerTurn == 1)
             switch board(row,j)
                 case 0
                     board(row,j) = 1;
                 case 1
-                    break;
+                    jump=1;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 1
         end % end if-else statement
+        if jump
+            jump=0;
+            break;
+        end
     end % end for j loop
     
     for i=row+1:1:7 % down vertical direction
         if (playerTurn == 0)    
             switch board(i,col)
                 case 0
-                    break;
+                    jump=1;
                 case 1
                     board(row,j) = 0;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 0
         elseif (playerTurn == 1)
             switch board(i,col)
                 case 0
                     board(i,col) = 1;
                 case 1
-                    break;
+                    jump=1;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 1
         end % end if-else statement
+        if jump
+            jump=0;
+            break;
+        end
     end % end for i loop
     
     for i=row-1:-1:2 % up vertical direction
         if (playerTurn == 0)    
             switch board(i,col)
                 case 0
-                    break;
+                    jump=1;
                 case 1
                     board(row,j) = 0;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 0
         elseif (playerTurn == 1)
             switch board(i,col)
                 case 0
                     board(i,col) = 1;
                 case 1
-                    break;
+                    jump=1;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 1
         end % end if-else statement
+        if jump
+            jump=0;
+            break;
+        end
     end % end for i loop
     
     for i=row+1:1:7 % down-right direction
@@ -471,22 +539,26 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         if (playerTurn == 0)    
             switch board(i,j)
                 case 0
-                    break;
+                    jump=1;
                 case 1
                     board(i,j) = 0;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 0
         elseif (playerTurn == 1)
             switch board(i,j)
                 case 0
                     board(i,j) = 1;
                 case 1
-                    break;
+                    jump=1;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 1
         end % end if-else statement  
+        if jump
+            jump=0;
+            break;
+        end
     end % end for i loop
     
     for i=row+1:1:7 % down-left direction
@@ -494,22 +566,26 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         if (playerTurn == 0)    
             switch board(i,j)
                 case 0
-                    break;
+                    jump=1;
                 case 1
                     board(i,j) = 0;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 0
         elseif (playerTurn == 1)
             switch board(i,j)
                 case 0
                     board(i,j) = 1;
                 case 1
-                    break;
+                    jump=1;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 1
          end % end if-else statement  
+         if jump
+            jump=0;
+            break;
+        end
     end % end for i loop
     
     for i=row-1:-1:2 % up-right direction
@@ -517,22 +593,26 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         if (playerTurn == 0)    
             switch board(i,j)
                 case 0
-                    break;
+                    jump=1;
                 case 1
                     board(i,j) = 0;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 0
         elseif (playerTurn == 1)
             switch board(i,j)
                 case 0
                     board(i,j) = 1;
                 case 1
-                    break;
+                    jump=1;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 1
         end % end if-else statement  
+        if jump
+            jump=0;
+            break;
+        end
     end % end for i loop
     
     for i=row-1:-1:2 % up-left direction
@@ -540,22 +620,25 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         if (playerTurn == 0)    
             switch board(i,j)
                 case 0
-                    break;
+                    jump=1;
                 case 1
                     board(i,j) = 0;
                 case 2
-                    break;
+                    jump=1;
              end % end switch playerTurn 0
         elseif (playerTurn == 1)
             switch board(i,j)
                 case 0
                     board(i,j) = 1;
                 case 1
-                    break;
+                    jump=1;
                 case 2
-                    break;
+                    jump=1;
             end % end switch playerTurn 1
         end % end if-else statement  
+        if jump
+            break;
+        end
     end % end for i loop
 
     board_flip_output=board;

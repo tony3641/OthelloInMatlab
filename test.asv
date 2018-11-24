@@ -1,5 +1,0 @@
-
-
-i=1
-switch i
-fprintf("\n%d",i)
