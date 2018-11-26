@@ -31,7 +31,7 @@ while game_state %main thread
     end %update graphic board
     imshow([Board{1,:};Board{2,:};Board{3,:};Board{4,:};Board{5,:};Board{6,:};Board{7,:};Board{8,:}])
     
-    pause(0.5);
+    pause(0.4);
     
     CURRENT_BOARD=npc_step(CURRENT_BOARD);
     for i=1:1:8
@@ -763,6 +763,10 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         end % end for i loop
     end
     
+    %FOR DEGUBBING
+    fprintf("\n%d %d\n",row,col);
+    %END
+    
     if playerTurn&&flip_number>0
         for i=1:1:flip_number
             if flip_disc(i,1)~=0&&flip_disc(i,2)~=0
@@ -800,6 +804,7 @@ function board_output=npc_step(board)
             state=validity_check(board,i,j,0);
             if state
                 board(i,j)=0;
+                fprintf("Valid point found:%d %d\n",i,j);
                 board=flipping_disc(board,i,j,0);
                 jump=1;
             end
@@ -808,6 +813,7 @@ function board_output=npc_step(board)
             end
         end
         if jump
+            jump=0;
             break;
         end
     end
@@ -820,12 +826,15 @@ function [state,black_number,white_number]=counter(board)
     black_number=0;
     white_number=0;
     total_number=0;
+    validity_state=1;
     for i=1:1:8
         for j=1:1:8
             if board(i,j)==1
+                validity_state=validity_check(board,i,j,1);
                 black_number=black_number+1;
                 total_number=total_number+1;
             elseif board(i,j)==0
+                validity_state=validity_check(board,i,j,0);
                 white_number=white_number+1;
                 total_number=total_number+1;
             end
