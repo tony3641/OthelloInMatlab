@@ -456,7 +456,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
     flip_number=0;
     flip_disc=[];
     
-    previous_state=flip_disc;
+    previous_disc=flip_disc;
     previous_number=flip_number;
     if col<7
         for j=col+1:1:7 % right horizontal direction
@@ -469,7 +469,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                     flip_disc(flip_number,1)=row;
                     flip_disc(flip_number,2)=j;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     previous_number=flip_number;
                     jump=1;
             end % end switch playerTurn 0
@@ -482,7 +482,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                 case 1
                     jump=1;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     previous_number=flip_number;
                     jump=1;
             end % end switch playerTurn 1
@@ -494,7 +494,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         end  % end for j loop
     end
     
-    previous_state=flip_disc;
+    previous_disc=flip_disc;
     previous_number=flip_number;
     if col>2
         for j=col-1:-1:2 % left horizontal direction
@@ -507,7 +507,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                     flip_disc(flip_number,1)=row;
                     flip_disc(flip_number,2)=j;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc; %cancel previous flipping actions
                     previous_number=flip_number;
                     jump=1;
             end % end switch playerTurn 0
@@ -520,7 +520,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                 case 1
                     jump=1;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     previous_number=flip_number;
                     jump=1;
             end % end switch playerTurn 1
@@ -532,7 +532,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         end % end for j loop
     end
     
-    previous_state=flip_disc;
+    previous_disc=flip_disc;
     previous_number=flip_number;
     if row<7
         for i=row+1:1:7 % down vertical direction
@@ -545,7 +545,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                     flip_disc(flip_number,1)=i;
                     flip_disc(flip_number,2)=col;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 0
@@ -558,7 +558,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                 case 1
                     jump=1;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 1
@@ -570,7 +570,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         end % end for i loop
     end
     
-    previous_state=flip_disc;
+    previous_disc=flip_disc; %save previous board
     previous_number=flip_number;
     if row>2
         for i=row-1:-1:2 % up vertical direction
@@ -583,7 +583,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                     flip_disc(flip_number,1)=i;
                     flip_disc(flip_number,2)=col;
                 case 2
-                    flip_state=previous_state;
+                    flip_state=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 0
@@ -596,7 +596,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                 case 1
                     jump=1;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 1
@@ -608,7 +608,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         end % end for i loop
     end
     
-    previous_state=flip_disc;
+    previous_disc=flip_disc;
     previous_number=flip_number;
     if col<7&&row<7
         for i=row+1:1:7 % down-right direction
@@ -622,7 +622,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                     flip_disc(flip_number,1)=i;
                     flip_disc(flip_number,2)=j;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 0
@@ -635,7 +635,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                 case 1
                     jump=1;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 1
@@ -647,7 +647,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         end % end for i loop
     end
     
-    previous_state=flip_disc;
+    previous_disc=flip_disc;
     previous_number=flip_number;
     if col>2&&row<7
         for i=row+1:1:7 % down-left direction
@@ -661,7 +661,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                     flip_disc(flip_number,1)=i;
                     flip_disc(flip_number,2)=j;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 0
@@ -674,7 +674,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                 case 1
                     jump=1;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 1
@@ -686,7 +686,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         end % end for i loop
     end
     
-    previous_state=flip_disc;
+    previous_disc=flip_disc;
     previous_number=flip_number;
     if col<7&&row>2
         for i=row-1:-1:2 % up-right direction
@@ -700,7 +700,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                     flip_disc(flip_number,1)=i;
                     flip_disc(flip_number,2)=j;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 0
@@ -713,7 +713,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                 case 1
                     jump=1;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 1
@@ -725,7 +725,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
         end % end for i loop
     end
     
-    previous_state=flip_disc;
+    previous_disc=flip_disc;
     previous_number=flip_number;
     if col>2&&row>2
         for i=row-1:-1:2 % up-left direction
@@ -739,7 +739,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                     flip_disc(flip_number,1)=i;
                     flip_disc(flip_number,2)=j;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
              end % end switch playerTurn 0
@@ -752,7 +752,7 @@ function board_flip_output=flipping_disc(board,row,col,playerTurn) %Player=1 NPC
                 case 1
                     jump=1;
                 case 2
-                    flip_disc=previous_state;
+                    flip_disc=previous_disc;
                     flip_number=previous_number;
                     jump=1;
             end % end switch playerTurn 1
