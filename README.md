@@ -1,3 +1,4 @@
 # OthelloInMatlab
 
-Fixed every bugs, see othello_final.m
+Fixed mostly every bugs, see othello_final.m
+
