@@ -1,3 +1,3 @@
 # OthelloInMatlab
-Is open source a kind of academic misconduct?
-😂😂😂😂
+
+Fixed every bugs, see othello_final.m
